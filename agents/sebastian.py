@@ -106,18 +106,19 @@ class Agent:
         return dir
 
     def _check_move(self, move, actual_position):
+        param = 0.1
         if len(self.target_moves)>5:
             if (self.target_moves[-3:]==[Action.DOWN,Action.UP,Action.DOWN]):
-                self.hist[actual_position[0]][actual_position[1]]*=0.2
+                self.hist[actual_position[0]][actual_position[1]]*=param
                 self._normalize_hist()
             if (self.target_moves[-3:]==[Action.UP,Action.DOWN,Action.UP]):
-                self.hist[actual_position[0]][actual_position[1]]*=0.2
+                self.hist[actual_position[0]][actual_position[1]]*=param
                 self._normalize_hist()
             if (self.target_moves[-3:]==[Action.LEFT,Action.RIGHT,Action.LEFT]):
-                self.hist[actual_position[0]][actual_position[1]]*=0.2
+                self.hist[actual_position[0]][actual_position[1]]*=param
                 self._normalize_hist()
             if (self.target_moves[-3:]==[Action.RIGHT,Action.LEFT,Action.RIGHT]):
-                self.hist[actual_position[0]][actual_position[1]]*=0.2
+                self.hist[actual_position[0]][actual_position[1]]*=param
                 self._normalize_hist()
         self.target_moves.append(move)
 
