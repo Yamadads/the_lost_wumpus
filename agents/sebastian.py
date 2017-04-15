@@ -93,11 +93,11 @@ class Agent:
         return dir
 
     def move(self):
-        #self.general_times_moved += 1
+        self.general_times_moved += 1
         a = np.array(self.hist)
         max_prob_idx = unravel_index(a.argmax(), a.shape)
         max_prob = self.hist[max_prob_idx[0]][max_prob_idx[1]]
-        if (max_prob) > self.max_prob_threshold:
+        if (max_prob) > self.max_prob_threshold and self.general_times_moved>15:
             dir = self._get_best_move(max_prob_idx)
             self._check_move(dir,max_prob_idx)
         else:
@@ -106,7 +106,7 @@ class Agent:
         return dir
 
     def _check_move(self, move, actual_position):
-        param = 0.1
+        param = 0.5
         if len(self.target_moves)>5:
             if (self.target_moves[-3:]==[Action.DOWN,Action.UP,Action.DOWN]):
                 self.hist[actual_position[0]][actual_position[1]]*=param
@@ -169,7 +169,7 @@ class Agent:
 
 
     def _snake_move(self):
-        if self.times_moved < self.width - 1:
+        if self.times_moved < 0.5*self.width - 1:
             self.times_moved += 1
             return self.direction
         else:
