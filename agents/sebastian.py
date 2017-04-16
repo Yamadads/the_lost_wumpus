@@ -63,7 +63,6 @@ class Agent:
         for row in range(len(self.hist)):
             for i in range(len(self.hist[0])):
                 self.hist[row][i] = self._calc_prob_in_field(row,i,move)
-        #self._normalize_hist()
 
     def _calc_prob_in_field(self, y, x, action):
         prob_sum = 0
@@ -135,7 +134,6 @@ class Agent:
         self.hist[actual_position[0]][actual_position[1]] *= 0.5
         return random.choice([Action.UP, Action.DOWN, Action.LEFT, Action.RIGHT])
 
-
     def _snake_move(self):
         if self.times_moved < 0.5*self.width - 1:
             self.times_moved += 1
@@ -146,5 +144,4 @@ class Agent:
             return Action.DOWN
 
     def histogram(self):
-        #print(self.hist)
         return self.hist
