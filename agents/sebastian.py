@@ -63,19 +63,16 @@ class Agent:
         for row in range(len(self.hist)):
             for i in range(len(self.hist[0])):
                 self.hist[row][i] = self._calc_prob_in_field(row,i,move)
-        self._normalize_hist()
+        #self._normalize_hist()
 
     def _calc_prob_in_field(self, y, x, action):
         prob_sum = 0
         x += self.move_dir[action][0]
         y += self.move_dir[action][1]
         for i in self.move_dir:
-            prob_sum += self._get_cyclic_temp_hist_value(y+self.move_dir[i][1],x+self.move_dir[i][0])*((1.0-self.p)/4)
-        prob_sum += self._get_cyclic_temp_hist_value(y,x)*self.p
+            prob_sum += self.temp_hist[(y+self.move_dir[i][1])%self.height][(x+self.move_dir[i][0])%self.width]*((1.0-self.p)/4)
+        prob_sum += self.temp_hist[y%self.height][x%self.width]*self.p
         return prob_sum
-
-    def _get_cyclic_temp_hist_value(self, y, x):
-        return self.temp_hist[y%self.height][x%self.width]
 
     def _update_hist_sense(self, sensor_result):
         for row in xrange(len(self.hist)):
@@ -100,7 +97,7 @@ class Agent:
         max_prob = self.hist[max_prob_idx[0]][max_prob_idx[1]]
         if (max_prob) > self.max_prob_threshold and self.general_times_moved>10:
             dir = self._get_best_move(max_prob_idx)
-            #self._check_move(dir,max_prob_idx)
+            self.direction = dir
         else:
             dir = self._snake_move()
         self._update_hist_move(dir)
@@ -135,10 +132,7 @@ class Agent:
                 return Action.DOWN
             else:
                 return Action.UP
-
         self.hist[actual_position[0]][actual_position[1]] *= 0.5
-        self._normalize_hist()
-
         return random.choice([Action.UP, Action.DOWN, Action.LEFT, Action.RIGHT])
 
 
