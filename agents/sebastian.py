@@ -4,6 +4,7 @@ from action import Action
 from numpy import unravel_index
 import copy
 
+
 class Agent:
 
     def __init__(self, p, pj, pn, height, width, areaMap):
@@ -97,44 +98,13 @@ class Agent:
         a = np.array(self.hist)
         max_prob_idx = unravel_index(a.argmax(), a.shape)
         max_prob = self.hist[max_prob_idx[0]][max_prob_idx[1]]
-        if (max_prob) > self.max_prob_threshold and self.general_times_moved>15:
+        if (max_prob) > self.max_prob_threshold and self.general_times_moved>10:
             dir = self._get_best_move(max_prob_idx)
-            self._check_move(dir,max_prob_idx)
+            #self._check_move(dir,max_prob_idx)
         else:
             dir = self._snake_move()
         self._update_hist_move(dir)
         return dir
-
-    def _check_move(self, move, actual_position):
-        param = 0.5
-        if len(self.target_moves)>5:
-            if (self.target_moves[-3:]==[Action.DOWN,Action.UP,Action.DOWN]):
-                self.hist[actual_position[0]][actual_position[1]]*=param
-                self._normalize_hist()
-            if (self.target_moves[-3:]==[Action.UP,Action.DOWN,Action.UP]):
-                self.hist[actual_position[0]][actual_position[1]]*=param
-                self._normalize_hist()
-            if (self.target_moves[-3:]==[Action.LEFT,Action.RIGHT,Action.LEFT]):
-                self.hist[actual_position[0]][actual_position[1]]*=param
-                self._normalize_hist()
-            if (self.target_moves[-3:]==[Action.RIGHT,Action.LEFT,Action.RIGHT]):
-                self.hist[actual_position[0]][actual_position[1]]*=param
-                self._normalize_hist()
-        self.target_moves.append(move)
-
-
-
-    def _get_trace_to_target(self, actual_position):
-        self.target_moves = []
-        while True:
-            move = self._get_best_move(actual_position)
-            if move == None:
-                break
-            self.target_moves.append(move)
-            new_position = (actual_position[0] +self.to_move_dir[move][1], actual_position[1] +self.to_move_dir[move][0])
-            actual_position = new_position
-        if (len(self.target_moves)==0):
-            self.target_moves.append(Action.DOWN)
 
     def _get_best_move(self, actual_position):
         actual_x = actual_position[1]
@@ -165,6 +135,10 @@ class Agent:
                 return Action.DOWN
             else:
                 return Action.UP
+
+        self.hist[actual_position[0]][actual_position[1]] *= 0.5
+        self._normalize_hist()
+
         return random.choice([Action.UP, Action.DOWN, Action.LEFT, Action.RIGHT])
 
 

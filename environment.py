@@ -30,6 +30,7 @@ class Env:
         Action.LEFT : (0, -1),
         Action.RIGHT : (0, 1)
     }
+    random.seed(9001)
     """Wartosci o jakie zmieniaja sie wspolrzedne agenta po wykonaniu deterministycznych akcji."""
 
     def __init__(self, path):
